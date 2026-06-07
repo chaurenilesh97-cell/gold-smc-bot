@@ -529,9 +529,20 @@ setInterval(updateDashboard, 10000);
 </html>
 """
 
+def keep_alive():
+    while True:
+        try:
+            import requests
+            requests.get("https://gold-smc-bot-z2r3.onrender.com", timeout=10)
+        except:
+            pass
+        import time
+        time.sleep(840)
+
 if __name__ == "__main__":
     print("=" * 50)
     print("🥇 GOLD SMC BOT — Web Dashboard")
     print("   Open browser: http://localhost:5000")
     print("=" * 50)
+    threading.Thread(target=keep_alive, daemon=True).start()
     app.run(host="0.0.0.0", port=8080, debug=False)
