@@ -544,5 +544,7 @@ if __name__ == "__main__":
     print("🥇 GOLD SMC BOT — Web Dashboard")
     print("   Open browser: http://localhost:5000")
     print("=" * 50)
+    state["running"] = True
+    threading.Thread(target=bot_loop, daemon=True).start()
     threading.Thread(target=keep_alive, daemon=True).start()
     app.run(host="0.0.0.0", port=8080, debug=False)
