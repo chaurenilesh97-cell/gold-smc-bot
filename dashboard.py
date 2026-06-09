@@ -201,15 +201,18 @@ def generate_signal(bias, bos, sweep_detected, obs, m15):
             return "SELL", sl, tp, f"SELL | Entry:{ob['low']}—{ob['high']} | SL:{sl} | TP:{tp} | R:R 1:2"
     return "NO_TRADE", 0, 0, "Conditions not aligned yet"
 
+last_update_id = 0
+
 def check_telegram_commands():
+    global last_update_id
     try:
-        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates"
-        r = requests.get(url, timeout=5)
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates?offset={last_update_id+1}&timeout=3"
+        r = requests.get(url, timeout=8)
         updates = r.json().get("result", [])
         if not updates:
             return
-        last_id = updates[-1]["update_id"]
-        requests.get(f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/getUpdates?offset={last_id+1}", timeout=5)
+        for update in updates:
+            last_update_id = update["update_id"]
         for update in updates:
             text = update.get("message", {}).get("text", "")
             if text == "/check":
